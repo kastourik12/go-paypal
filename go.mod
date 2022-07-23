@@ -4,9 +4,9 @@ go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.1
-	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.4.0
 	github.com/logpacker/PayPal-Go-SDK v2.0.5+incompatible
+	github.com/netlify/PayPal-Go-SDK v1.0.2
 )
 
 require (
