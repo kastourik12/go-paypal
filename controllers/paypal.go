@@ -27,7 +27,7 @@ func (c *Paypal) CreatePayment(ctx *gin.Context) {
 }
 
 func (c *Paypal) ExecutePayment(ctx *gin.Context) {
-	payerID := ctx.Query("payerId")
+	payerID := ctx.Query("PayerID")
 	paymentID := ctx.Query("paymentId")
 	err := c.service.ExecutePayment(paymentID, payerID)
 	if err != nil {

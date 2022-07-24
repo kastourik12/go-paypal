@@ -18,24 +18,11 @@ func NewPaypalService(c *paypalsdk.Client, l *log.Logger) *Paypal {
 	}
 }
 func (s *Paypal) CreatePayment(request requests.Paypal) (string, error) {
-	p := paypalsdk.Payment{
-		Intent: "sale",
-		Payer: &paypalsdk.Payer{
-			PaymentMethod: "paypal",
-		},
-		Transactions: []paypalsdk.Transaction{paypalsdk.Transaction{
-			Amount: &paypalsdk.Amount{
-				Currency: request.Currency,
-				Total:    request.Total,
-			},
-			Description: "My Payment",
-		}},
-		RedirectURLs: &paypalsdk.RedirectURLs{
-			ReturnURL: "http://localhost:8080/v1/paypal/execute",
-			CancelURL: "http://exemple.com/cancel",
-		},
+	amount := paypalsdk.Amount{
+		Total:    request.Total,
+		Currency: request.Currency,
 	}
-	payment, err := s.client.CreatePayment(p)
+	payment, err := s.client.CreateDirectPaypalPayment(amount, "http://localhost:8080/v1/paypal/execute", "http://exemple.com/cancel", "")
 	if err != nil {
 		return "", err
 	}
@@ -49,10 +36,9 @@ func (s *Paypal) CreatePayment(request requests.Paypal) (string, error) {
 	return successLink, nil
 }
 func (s *Paypal) ExecutePayment(paymentID, payerID string) error {
-
 	_, err := s.client.ExecuteApprovedPayment(paymentID, payerID)
 	if err != nil {
-		s.logger.Fatal(err)
+		s.logger.Println(err.Error())
 		return err
 	}
 	return nil
